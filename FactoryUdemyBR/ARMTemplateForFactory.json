@@ -1,0 +1,105 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "FactoryUdemyBR"
+		},
+		"AzureDatabricksConexaoUdemyBR_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricksConexaoUdemyBR'"
+		},
+		"AzureDatabricksConexaoUdemyBR_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1216-185215-j6bqx2uo"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline-anac')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "AnacSilver",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Repos/vinikrebs@gmail.com/DatabricksANAC/Notebook's/4. Anac - Camada Silver (Refaturado)"
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureDatabricksConexaoUdemyBR",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "AnacGold",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "AnacSilver",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Repos/vinikrebs@gmail.com/DatabricksANAC/Notebook's/6. Anac - Camada Gold (Refaturado)"
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureDatabricksConexaoUdemyBR",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDatabricksConexaoUdemyBR')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDatabricksConexaoUdemyBR')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-8023696190823269.9.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDatabricksConexaoUdemyBR_accessToken')]"
+					},
+					"existingClusterId": "[parameters('AzureDatabricksConexaoUdemyBR_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

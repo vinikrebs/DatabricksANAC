@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "FactoryUdemyBR"
+		},
+		"AzureDatabricksConexaoUdemyBR_accessToken": {
+			"value": ""
+		},
+		"AzureDatabricksConexaoUdemyBR_properties_typeProperties_existingClusterId": {
+			"value": "1216-185215-j6bqx2uo"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
