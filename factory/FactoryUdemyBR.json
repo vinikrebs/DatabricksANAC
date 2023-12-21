@@ -1,0 +1,9 @@
+{
+	"name": "FactoryUdemyBR",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "d5470209-f04a-4e84-93cc-45e42001a823",
+		"tenantId": "c254e016-8bdc-47df-8c6b-57910aae793f"
+	}
+}
